@@ -1,0 +1,330 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Gesture To Voice</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/font-awesome.min.css" rel="stylesheet" />
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/jquery-3.1.0.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+    <script src="Leap/leap.js"></script>
+    <script src="Leap/leaptrainer.min.js"></script>
+
+    <style>
+        .sub-nav {
+            color: #444;
+            padding: 5px;
+        }
+
+            .sub-nav select {
+                width: 200px;
+                display: inline-block;
+            }
+    </style>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+
+    <div id="main">
+        <div id="render-area"></div>
+    </div>
+
+    <div id="overlay">
+        <div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://www.leapmotion.com/">LEAP Motion</a></li>
+                    <li><a href="http://responsivevoice.org/">ResponsiveVoice.JS</a></li>
+                    <li><a href="https://github.com/roboleary/LeapTrainer.js/tree/master">LeapTrainer.js</a></li>
+                    <li><a href="http://localhost/USL.GestureDefiner.LeapTrainer/LeapTrainer.js-master/trainer-ui.html">Train Your Gesture</a></li>
+                    <li><a href="#"><i class="fa fa-registered"></i> Register</a></li>
+                    <li><a href="#"><i class="fa fa-user"></i> Login</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 sub-nav">
+                    <button class="btn btn-default" onclick="loadVoice('father_sinhala')">Check Audio</button>
+                    <button class="btn btn-default" onclick="playVoice()">Play Audio</button>
+                    <label for="mySelectL">Select a Language:</label>
+                    <select class="form-control" name="mySelectL" id="mySelectL"
+                            ng-options="option.name for option in dataLanguages.availableOptions track by option.id"
+                            ng-model="dataLanguages.selectedOption"></select>
+                    <label for="mySelectV">Select a Voice Type:</label>
+                    <select class="form-control" name="mySelectV" id="mySelectV"
+                            ng-options="option.name for option in dataVoiceTypes.availableOptions track by option.id"
+                            ng-model="dataVoiceTypes.selectedOption"></select>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="span4"></div>
+            <div class="span4"><img class="center-block" src="images/lets_talk_with_gestures.JPG" width="270" height="95" alt="Google" id="logo"></div>
+            <div class="span4"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="sentence">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="talk()"><i class="fa fa-microphone"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="btn-group-wrap">
+            <div class="btn-group">
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary" onclick="talk()">Talk</button>
+            </div>
+        </div>
+
+        <div>
+            <audio id="player">
+                <source id="audioSource" src="" type="audio/mp3">
+            </audio>
+        </div>
+
+
+        <div id="footer">
+            <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="container">
+
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="#">Chathuanga Wijesinghe</a></li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Thanks to...</a></li>
+                        <li><a href="http://www.iit.ac.lk/dr-ruvan-weerasinghe/">Dr. Ruvan Weerasinghe</a></li>
+                        <li><a href="http://www.iit.ac.lk/mr-guhanathan-poravi/">Mr. Guhanathan Poravi</a></li>
+                        <li><a href="http://www.iit.ac.lk/mr-mohamed-cassim-farook/">Mr. Mohamed Cassim</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    var words = [];
+    var sentence = '';
+
+    function checkLanguage(word) {
+        for (var i = 0; i < words.length; i++) {
+            if (word == words[i])
+                return false;
+        }
+        return true;
+    }
+
+    function arrayToString() {
+        sentence = '';
+        for (var i = 0; i < words.length; i++) {
+            sentence += words[i] + ' ';
+        }
+        return sentence;
+    }
+
+    function setData() {
+        document.getElementById("sentence").value = arrayToString();
+    }
+
+    function talk() {
+        var e = document.getElementById("mySelectV");
+        var voiceType = e.options[e.selectedIndex].text;
+        if (voiceType === 'Audio') {
+            playVoice();
+        } else {
+            var str = document.getElementById("sentence").value;
+            responsiveVoice.speak(str);
+            words = [];
+        }
+        document.getElementById("sentence").value = '';
+    }
+
+    function backspace() {
+        words.pop();
+        document.getElementById("sentence").value = arrayToString();
+    }
+
+    function loadVoice(voiceName) {
+        var source = document.getElementById('audioSource');
+        source.src = 'Audios/' + voiceName + '.m4a';
+    }
+
+    function playVoice() {
+        var player = document.getElementById('player');
+
+        player.load();
+        player.play();
+    }
+
+    var controller = new Leap.Controller({
+        enableGestures: true,
+        frameEventName: 'animationFrame'
+    });
+
+    var hands = 0;
+    var fingers = 0;
+
+    controller.on('frame', function (frame) {
+        hands = frame.hands.length;
+        fingers = frame.fingers.length;
+
+    });
+    controller.connect();
+
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http, $timeout) {
+        var trainer = null;
+
+        $scope.dataLanguages = {
+            availableOptions: [
+              { id: '1', name: 'American Sign Language' },
+              { id: '2', name: 'Sri Lankan Sign Language' },
+              { id: '3', name: 'Tamil Sign Language' }
+            ],
+            selectedOption: { id: '2', name: 'Sri Lankan Sign Language' } //This sets the default value of the select in the ui
+        };
+
+        $scope.dataVoiceTypes = {
+            availableOptions: [
+              { id: '1', name: 'Text' },
+              { id: '2', name: 'Audio' }
+            ],
+            selectedOption: { id: '2', name: 'Audio' } //This sets the default value of the select in the ui
+        };
+
+        $scope.$watchCollection("dataLanguages.selectedOption", function (newValue, oldValue) {
+            trainer = null;
+            getGesturesForLanguage();
+        });
+
+        //$http({
+        //    method: "GET",
+        //    url: "http://localhost/SLD.Service/api/Language"
+        //}).then(function mySucces(response) {
+        //    //$scope.myWelcome = response.data;
+        //    $scope.languages = response;
+        //    $timeout(function () { getGestures(); }, 1000);
+
+        //}, function myError(response) {
+        //    $scope.myWelcome = response.statusText;
+        //});
+
+        function getGesturesForLanguage() {
+            $http({
+                method: "GET",
+                url: "http://localhost/SLD.Service/api/Language?languageId=" + $scope.dataLanguages.selectedOption.id
+            }).then(function mySucces(response) {
+                //$scope.myWelcome = response.data;
+                trainer = new LeapTrainer.Controller();
+
+                trainer.fromJSON('{"name":"LEFT","pose":false,"data":[[{"x":0.3010925460181878,"y":-0.07843443431619275,"z":0.08930070097833401,"stroke":1},{"x":0.36953713466230786,"y":-0.015912440364609565,"z":-0.06435768651883496,"stroke":1},{"x":0.3239694291008052,"y":0.01707955661301569,"z":-0.13199456584663974,"stroke":1},{"x":0.45048955078099695,"y":-0.0783787975431286,"z":-0.07957973225236922,"stroke":1},{"x":0.24382285146794458,"y":-0.0506632902523433,"z":-0.025639588688239304,"stroke":1},{"x":0.06585020588999424,"y":-0.000921294744776549,"z":0.018547049362325818,"stroke":1},{"x":0.1787572417689337,"y":-0.0021707739737082676,"z":-0.025377178139777842,"stroke":1},{"x":0.14376603688812106,"y":0.04594207007474535,"z":-0.14375609586570057,"stroke":1},{"x":0.26411249144176097,"y":-0.06806522650272301,"z":-0.05482498628513573,"stroke":1},{"x":-0.011343524202386823,"y":0.007673320774141748,"z":-0.015968491256589362,"stroke":1},{"x":-0.022338262487440974,"y":0.006122472951742952,"z":0.06963491589689177,"stroke":1},{"x":0.01295262122541041,"y":0.06073216731439167,"z":-0.1428898711493759,"stroke":1},{"x":0.05684437237986095,"y":0.03922942107606542,"z":-0.13957075908423935,"stroke":1},{"x":-0.054783820248822945,"y":0.01204459445109965,"z":-0.030325882147791153,"stroke":1},{"x":-0.1766346502746985,"y":0.022087666622683064,"z":-0.0007991419881328288,"stroke":1},{"x":-0.29660341327705675,"y":0.0232701606539093,"z":0.03561840321531626,"stroke":1},{"x":-0.293770360439121,"y":0.01733331189826183,"z":0.07515200354030843,"stroke":1},{"x":-0.2471823479712525,"y":0.01255454371412551,"z":0.10947154359125585,"stroke":1},{"x":-0.23239954081819425,"y":0.011846102318957469,"z":0.121523498702263,"stroke":1},{"x":-0.253755194824828,"y":0.015650138254726553,"z":0.10398480035466942,"stroke":1},{"x":-0.27287291786152196,"y":0.013983739587673905,"z":0.10209974190417287,"stroke":1},{"x":-0.549510449219003,"y":-0.011003008608058723,"z":0.12975132167728734,"stroke":1}]]}');
+                trainer.fromJSON('{"name":"RIGHT","pose":false,"data":[[{"x":-0.27748483380757416,"y":-0.10484038361084126,"z":0.12769388668173656,"stroke":1},{"x":-0.49878625607276134,"y":-0.17410716583261193,"z":0.04938810161239085,"stroke":1},{"x":-0.3330647808617583,"y":-0.08084549709637684,"z":-0.044859862327142785,"stroke":1},{"x":-0.21280912354732678,"y":0.009998096912140292,"z":-0.11289889188161761,"stroke":1},{"x":-0.35395984664514896,"y":-0.020817360435685744,"z":-0.13326350838976886,"stroke":1},{"x":-0.21786267382061253,"y":0.060309017992779546,"z":-0.1588775372355272,"stroke":1},{"x":-0.1949148940054175,"y":0.008539659564364421,"z":-0.04495318652665095,"stroke":1},{"x":-0.09296468444461065,"y":-0.05652496936382766,"z":0.13259780140530578,"stroke":1},{"x":-0.23456629117031091,"y":-0.10791205839321208,"z":0.06687222593139228,"stroke":1},{"x":-0.16601364841584587,"y":-0.05637794090296443,"z":0.005296428368103123,"stroke":1},{"x":0.04180964940764048,"y":0.046909043883152673,"z":-0.04576717566093662,"stroke":1},{"x":0.08292534907039745,"y":0.050522419002422075,"z":-0.037918724599338066,"stroke":1},{"x":-0.01460567169294047,"y":-0.0036553996449951442,"z":0.005216829188986999,"stroke":1},{"x":-0.08644592021200848,"y":-0.03933624966125723,"z":0.04770089926080062,"stroke":1},{"x":0.0960193060169055,"y":-0.017354830018472128,"z":0.12678034302404914,"stroke":1},{"x":0.1943856232932552,"y":0.030863164945053312,"z":0.08625842497500477,"stroke":1},{"x":0.24172242075744904,"y":0.10733121196248946,"z":-0.04416380315610567,"stroke":1},{"x":0.34437947201752156,"y":0.14763843325829568,"z":-0.10381387009530041,"stroke":1},{"x":0.49277699028264904,"y":0.09669169336681038,"z":-0.0306619778626237,"stroke":1},{"x":0.5012137439272386,"y":0.05097103162123265,"z":0.017332768071807808,"stroke":1},{"x":0.4415266777080569,"y":0.03419660294927146,"z":0.03110161418233176,"stroke":1},{"x":0.24671939221520028,"y":0.01780147950223296,"z":0.060939215033101984,"stroke":1}]]}');
+                trainer.fromJSON('{"name":"RIGHT_","pose":true,"data":[[{"x":-0.34722222222222227,"y":-0.025139798390563076,"z":-0.006434694995837004,"stroke":1},{"x":-0.3055555555555555,"y":-0.02212302258369546,"z":-0.00566253159633656,"stroke":1},{"x":0.6527777777777777,"y":0.047262820974258546,"z":0.012097226592173566,"stroke":1}]]}');
+                trainer.fromJSON('{"name":"LEFT_","pose":true,"data":[[{"x":0.3472222222222222,"y":-0.013013881877533913,"z":0.01089055103398822,"stroke":1},{"x":0.30555555555555547,"y":-0.01145221605222987,"z":0.009583684909909636,"stroke":1},{"x":-0.6527777777777778,"y":0.024466097929763786,"z":-0.020474235943897856,"stroke":1}]]}');
+
+                trainer.on('LEFT', backspace);
+                trainer.on('RIGHT', talk);
+                trainer.on('LEFT_', backspace);
+                trainer.on('RIGHT_', talk);
+
+                angular.forEach(response.data, function (Gesture, index) {
+                    //$scope.myWelcome = Gesture.UserID;
+                    trainer.fromJSON(Gesture.Matrix);
+                    trainer.on(Gesture.GestureName, function () {
+                        if (checkLanguage(Gesture.Voice) && fingers == Gesture.Fingers && hands == Gesture.Hands) {
+                            if ($scope.dataVoiceTypes.selectedOption.name === 'Audio') {
+                                loadVoice(Gesture.AudioFile);
+                            }
+                            words.push(Gesture.Voice);
+                        }
+                        setData();
+                    });
+                });
+            }, function myError(response) {
+                $scope.myWelcome = response.statusText;
+            });
+        }
+    });
+
+</script>
+
+<style>
+    body {
+        background-color: #ecf0f1;
+    }
+
+    .navbar-default {
+        max-height: 40px;
+        background-color: #2980b9 !important;
+        border-color: #2980b9;
+        color: #ecf0f1;
+    }
+
+    .navbar-right {
+        float: right;
+    }
+
+    .navbar-default .navbar-brand {
+        color: #ecf0f1 !important;
+    }
+
+    .navbar-default .navbar-nav > li > a {
+        color: #ecf0f1 !important;
+    }
+
+    .col-xs-6 {
+        float: none !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .center-block {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 200px;
+        margin-bottom: 20px;
+    }
+
+    .btn-group-wrap {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    div.btn-group {
+        margin: 0 auto;
+        text-align: center;
+        width: inherit;
+        display: inline-block;
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+    .btn-primary {
+        color: #ecf0f1 !important;
+        background-color: #2980b9 !important;
+        border-color: #2980b9 !important;
+    }
+</style>

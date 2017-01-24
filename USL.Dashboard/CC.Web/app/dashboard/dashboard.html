@@ -1,0 +1,136 @@
+﻿<section id="dashboard-view" class="mainbar" data-ng-controller="dashboard as vm">
+    <section class="matter">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="today-datas">
+                        <li class="blightblue">
+                            <div class="pull-left"><i class="fa fa-university"></i></div>
+                            <div class="datas-text pull-right">
+                                <span class="bold">October 06, 2016</span> Colombo, Sri Lanka
+                            </div>
+                            <div class="clearfix"></div>
+                        </li>
+
+                        <li class="borange">
+                            <a href="#/admins">
+                                <div class="pull-left"><i class="fa fa-calendar"></i></div>
+                                <div class="datas-text pull-right">
+                                    <span class="bold">{{vm.counts.Admins}}</span> Admins
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+
+                        <li class="bgreen">
+                            <a href="#/users">
+                                <div class="pull-left"><i class="fa fa-group"></i></div>
+                                <div class="datas-text pull-right">
+                                    <span class="bold">{{vm.counts.Users}}</span> Users
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+
+                        <li class="bviolet">
+                            <a href="#/checkers">
+                                <div class="pull-left"><i class="fa fa-microphone"></i></div>
+                                <div class="datas-text pull-right">
+                                    <span class="bold">{{vm.counts.Checkers}}</span> Checkers
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+
+                        <li class="bviolet">
+                            <a href="#/definers">
+                                <div class="pull-left"><i class="fa fa-microphone"></i></div>
+                                <div class="datas-text pull-right">
+                                    <span class="bold">{{vm.counts.Definers}}</span> Definers
+                                </div>
+                                <div class="clearfix"></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="widget wgreen">
+                        <div data-cc-widget-header title="{{vm.map.title}}"
+                             allow-collapse="true"></div>
+                        <div class="widget-content">
+                            <div class="map">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2932.13437153879!2d-111.0264108690959!3d29.07865495293817!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86ce83c1aac2ae91%3A0xb200a89b840f3f54!2zMjnCsDA0JzM4LjgiTiAxMTHCsDAxJzMwLjEiVw!5e0!3m2!1sen!2smx!4v1465172361224"
+                                        width="400" height="230" frameborder="0" style="border:0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="widget wlightblue">
+                        <div data-cc-widget-header title="{{vm.comments.title}}"
+                             allow-collapse="true"></div>
+                        <div class="widget-content text-center text-info">
+                            <carousel class="carousel-inner" interval="vm.comments.interval">
+                                <slide data-ng-repeat="c in vm.comments.list">
+                                    <img data-cc-img-person="{{c.Image}}" class="img-polaroid" />
+                                    <div class="carousel-caption" style="padding-bottom: 0px !important">
+                                        <h4>{{c.User}}</h4>
+                                        <h6>{{c.UserComment}}</h6>
+                                    </div>
+                                </slide>
+                            </carousel>
+                        </div>
+                    </div>
+                    <div class="widget-foot">
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="widget wviolet">
+                        <div data-cc-widget-header title="{{vm.languages.title}}"
+                             allow-collapse="true"></div>
+                        <div class="widget-content">
+                            <div class="widget-content referrer">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Language</th>
+                                            <th>Gestures</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-ng-repeat="l in vm.languages.list">
+                                            <td>{{l.Language1}}</td>
+                                            <td>{{l.Gestures}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="widget-foot">
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="widget wgreen">
+                        <div data-cc-widget-header title="{{vm.news.title}}"
+                             allow-collapse="true"></div>
+                        <div class="widget-content text-center text-info">
+                            <small>{{vm.news.description}}</small>
+                        </div>
+                        <div class="widget-foot">
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

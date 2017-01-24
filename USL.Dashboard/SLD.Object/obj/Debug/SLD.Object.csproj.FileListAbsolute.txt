@@ -1,0 +1,10 @@
+C:\Users\chathurangarw\Desktop\SLD.Service\SLD.Object\bin\Debug\SLD.Object.dll
+C:\Users\chathurangarw\Desktop\SLD.Service\SLD.Object\bin\Debug\SLD.Object.pdb
+C:\Users\chathurangarw\Desktop\SLD.Service\SLD.Object\obj\Debug\SLD.Object.dll
+C:\Users\chathurangarw\Desktop\SLD.Service\SLD.Object\obj\Debug\SLD.Object.pdb
+C:\Users\chathurangarw\Desktop\SLD.Service\SLD.Object\obj\Debug\SLD.Object.csprojResolveAssemblyReference.cache
+C:\Users\chathurangarw\Desktop\USL.Dashboard\SLD.Object\bin\Debug\SLD.Object.dll
+C:\Users\chathurangarw\Desktop\USL.Dashboard\SLD.Object\bin\Debug\SLD.Object.pdb
+C:\Users\chathurangarw\Desktop\USL.Dashboard\SLD.Object\obj\Debug\SLD.Object.csprojResolveAssemblyReference.cache
+C:\Users\chathurangarw\Desktop\USL.Dashboard\SLD.Object\obj\Debug\SLD.Object.dll
+C:\Users\chathurangarw\Desktop\USL.Dashboard\SLD.Object\obj\Debug\SLD.Object.pdb

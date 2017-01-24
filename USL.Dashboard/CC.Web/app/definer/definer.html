@@ -1,0 +1,36 @@
+﻿<section class="mainbar" data-ng-controller="definers as vm">
+    <section class="matter">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="form-search">
+                    <input class="input-lg search-query" data-ng-model="vm.speakerSearch"
+                           data-ng-keyup="vm.search($event)" placeholder="live search..." />
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-info" data-ng-click="vm.refresh()">
+                            <i class="glyphicon glyphicon-refresh"></i><span>Refresh</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="widget wviolet">
+                    <div data-cc-widget-header title="{{vm.title}}"></div>
+                    <div class="widget-content user">
+                        <div class="padd list-flow" data-ng-repeat="d in vm.definers.data">
+                            <div class="user">
+                                <img data-cc-img-person="{{d.Image}}" class="img-polaroid stacked" />
+                                <div class="name-stack">
+                                    <h5>{{d.Firstname}}</h5>
+                                    <h5>{{d.Lastname}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-foot">
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
